@@ -50,6 +50,10 @@ export default function CustomizedTables() {
   const classes = useStyles();
 
   return (
+    <div>
+    <br/>
+    <h1>Boku No Hero Villains</h1>
+    <br/>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">
         <TableHead>
@@ -72,5 +76,6 @@ export default function CustomizedTables() {
         </TableBody>
       </Table>
     </TableContainer>
+    </div>
   );
 }
