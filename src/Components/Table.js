@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{ useContext } from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,13 +12,18 @@ import shisaki from '../Assets/images/shisaki.png';
 import dabi from '../Assets/images/dabi.jpg';
 import tomura from '../Assets/images/tomura.jpg';
 
+import { Redirect } from "react-router-dom";
+
+import { AuthContext } from "../auth/auth";
+import {auth} from "../auth/firebase";
+
 const StyledTableCell = withStyles((theme) => ({
   head: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
   },
   body: {
-    fontSize: 14,
+    fontSize: 19,
   },
 }))(TableCell);
 
@@ -47,12 +52,20 @@ const useStyles = makeStyles({
 });
 
 export default function CustomizedTables() {
+  const { currentUser } = useContext(AuthContext);
   const classes = useStyles();
 
+  if (!currentUser) {
+    return <Redirect to="/login" />;
+  }
+  
   return (
     <div>
     <br/>
-    <h1>Boku No Hero Villains</h1>
+    <div className = "flex justify-between">
+      <h1 className = "font-extrabold text-xl">Boku No Hero Villains</h1>
+      <button className="bg-black hover:bg-red-600 w-20 py-2 text-white rounded-lg" onClick={() => auth.signOut()}>Sign out</button>
+    </div>
     <br/>
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="customized table">

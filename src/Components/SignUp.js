@@ -1,15 +1,31 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Redirect , Link} from "react-router-dom";
+import {auth} from '../auth/firebase';
+
 const SignUp = () => {
+  const [currentUser,setcurrentUser] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState(null);
-  const createUserWithEmailAndPasswordHandler = (event, email, password) => {
+
+  const createUserWithEmailAndPasswordHandler = (event) => {
     event.preventDefault();
+    const{ userEmail , userPassword } = event.target.elements;
+    console.log(userEmail);
+    auth
+    .createUserWithEmailAndPassword(userEmail.value, userPassword.value).then(()=>{setcurrentUser(true);})
+    .catch((error)=>{
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/weak-password') {
+        setError('The password is too weak.');
+      } else {
+        setError(errorMessage);
+      }
+      console.log(error);
+    });
     setEmail("");
     setPassword("");
-    setDisplayName("");
   };
   const onChangeHandler = event => {
     const { name, value } = event.currentTarget;
@@ -17,10 +33,12 @@ const SignUp = () => {
       setEmail(value);
     } else if (name === "userPassword") {
       setPassword(value);
-    } else if (name === "displayName") {
-      setDisplayName(value);
     }
   };
+
+  if(currentUser){
+    return <Redirect to="/home"/>;
+  }
   return (
     <div className="mt-8">
       <h1 className="text-3xl mb-2 text-center font-bold">Sign Up</h1>
@@ -30,19 +48,7 @@ const SignUp = () => {
             {error}
           </div>
         )}
-        <form className="">
-          <label htmlFor="displayName" className="block">
-            Display Name:
-          </label>
-          <input
-            type="text"
-            className="my-1 p-1 w-full "
-            name="displayName"
-            value={displayName}
-            placeholder="Your Name"
-            id="displayName"
-            onChange={event => onChangeHandler(event)}
-          />
+        <form className="" onSubmit={createUserWithEmailAndPasswordHandler}>
           <label htmlFor="userEmail" className="block">
             Email:
           </label>
@@ -68,10 +74,8 @@ const SignUp = () => {
             onChange={event => onChangeHandler(event)}
           />
           <button
+             type="submit"
             className="bg-black hover:bg-gray-500 w-full py-2 text-white"
-            onClick={event => {
-              createUserWithEmailAndPasswordHandler(event, email, password);
-            }}
           >
             Sign up
           </button>
