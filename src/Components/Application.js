@@ -1,15 +1,34 @@
-
+import {Component} from "react";
 import {BrowserRouter, Route , Switch} from "react-router-dom";
+import axios from 'axios';
 import Login from './Login';
 import SignUp from './SignUp';
 import CustomizedTables from './Table';
 import { AuthProvider } from "../auth/auth";
 
-function Application() {
+
+class Application extends Component{
+  constructor() {
+    super();
+    this.state = {
+	data:[]
+     };
+  }
+  componentDidMount(){
+    //https://us-central1-serverless-tp-1.cloudfunctions.net/tpfaas
+    axios.get('https://us-central1-serverless-tp-1.cloudfunctions.net/tpfaas')
+    .then((response) => {
+    const resData = response.data;
+    resData.img = resData.img.substring(3);
+    console.log(resData);
+    this.setState({data:[response.data]})
+    });
+  }
   
+  render(){
   const Home = () => {
     return(
-      <CustomizedTables/>
+      <CustomizedTables data={this.state.data}/>
     );
   }
 
@@ -24,7 +43,6 @@ function Application() {
       <Login />
     );
   }
-
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -36,7 +54,7 @@ function Application() {
         </Switch>
       </BrowserRouter>
     </AuthProvider>
-  );
+  );}
 }
 
 export default Application;

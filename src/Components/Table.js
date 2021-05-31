@@ -8,10 +8,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-import shisaki from '../Assets/images/shisaki.png';
-import dabi from '../Assets/images/dabi.jpg';
-import tomura from '../Assets/images/tomura.jpg';
-
 import { Redirect } from "react-router-dom";
 
 import { AuthContext } from "../auth/auth";
@@ -39,22 +35,16 @@ function createData(id,image, name, caracteristiques) {
   return {id,image, name, caracteristiques};
 }
 
-const rows = [
-  createData(0,shisaki, 'shisaki kai', 'overhaul'),
-  createData(1,tomura, 'shigaraki tomura', 'all for one'),
-  createData(2,dabi, 'dabi (touya todoroki)', 'Cremation(flames)')
-];
-
 const useStyles = makeStyles({
   table: {
     minWidth: 700,
   },
 });
 
-export default function CustomizedTables() {
+export default function CustomizedTables(props) {
   const { currentUser } = useContext(AuthContext);
+  const rows = props.data;
   const classes = useStyles();
-
   if (!currentUser) {
     return <Redirect to="/login" />;
   }
@@ -80,10 +70,10 @@ export default function CustomizedTables() {
           {rows.map((row) => (
             <StyledTableRow key={row.id}>
               <StyledTableCell component="th" scope="row">
-                <img src={row.image} alt={row.name} width="130"/>
+                <img src={row.img} alt={row.nom} width="130"/>
               </StyledTableCell>
-              <StyledTableCell align="right">{row.name}</StyledTableCell>
-              <StyledTableCell align="right">{row.caracteristiques}</StyledTableCell>
+              <StyledTableCell align="right">{row.nom}</StyledTableCell>
+              <StyledTableCell align="right">{row.caracs}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
