@@ -16,7 +16,7 @@ class Application extends Component{
   }
   componentDidMount(){
     //https://us-central1-serverless-tp-1.cloudfunctions.net/tpfaas
-    axios.get('https://us-central1-serverless-tp-1.cloudfunctions.net/tpfaas')
+    axios.get('https://us-central1-serverless-tp-1.cloudfunctions.net/tpcicd')
     .then((response) => {
     const resData = response.data;
     resData.img = resData.img.substring(3);
